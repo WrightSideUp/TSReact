@@ -1,0 +1,27 @@
+{
+  "name": "tsreact",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/react": "^16.0.20",
+    "@types/react-dom": "^16.0.2",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "styled-components": "^2.2.3"
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.47",
+    "@types/webpack": "^3.0.14",
+    "source-map-loader": "^0.2.3",
+    "ts-loader": "^3.1.1",
+    "ts-node": "^3.3.0",
+    "tslint-config-prettier": "^1.6.0",
+    "typescript": "^2.6.1"
+  }
+}
