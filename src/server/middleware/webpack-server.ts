@@ -10,8 +10,6 @@ const log = debug("app:webpack:dev");
 const warn = debug("app:webpack:dev:warn");
 const error = debug("app:webpack:dev:error");
 
-console.log(config.entry);
-
 export const devMiddleware = webpackDevMiddleware(compiler, {
   error,
   log,

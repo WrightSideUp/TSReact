@@ -1,9 +1,7 @@
 import * as webpack from "webpack";
-// import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
-import { join } from "path";
+import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 
 const config: webpack.Configuration = {
-  context: join(__dirname, "../"),
   devtool: "inline-source-map",
   entry: [
     "react-hot-loader/patch",
@@ -38,10 +36,10 @@ const config: webpack.Configuration = {
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
-    // new BundleAnalyzerPlugin({
-    //   logLevel: "silent",
-    //   openAnalyzer: false
-    // })
+    new BundleAnalyzerPlugin({
+      logLevel: "silent",
+      openAnalyzer: false
+    })
   ],
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx"]
