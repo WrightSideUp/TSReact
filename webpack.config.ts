@@ -1,30 +1,11 @@
-import * as webpack from "webpack"
-import * as path from "path"
+import * as webpack from "webpack";
+import * as merge from "webpack-merge";
+import base from "./webpack/webpack.base";
+import dev from "./webpack/webpack.dev";
+import prod from "./webpack/webpack.prod";
 
-const config: webpack.Configuration = {
-  entry: "./src/index.tsx",
-  output: {
-    filename: "bundle.js",
-    path: path.join(__dirname, "dist"),
-  },
+function getConfig(env: string): webpack.Configuration {
+  return merge(base(env), env === "production" ? prod : dev);
+}
 
-  devtool: "source-map",
-
-  resolve: {
-    extensions: [ ".ts", ".tsx", ".js", ".json" ]
-  },
-
-  module: {
-    rules: [
-      { test: /\.tsx?$/, loader: "ts-loader" },
-      { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
-    ]
-  },
-
-  externals: {
-    "react": "React",
-    "react-dom": "ReactDOM"
-  },
-};
-
-export default config;
+export default getConfig;

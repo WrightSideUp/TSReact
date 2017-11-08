@@ -1,6 +1,13 @@
 {
+  "defaultSeverity": "error",
   "extends": [
-    "tslint:latest",
+    "tslint:reommended",
+    "tslint-react",
     "tslint-config-prettier"
-  ]
+  ],
+  "jsRules": {
+    "trailing-comma": [
+      false
+    ]
+  },
 }
