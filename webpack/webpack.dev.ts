@@ -1,12 +1,13 @@
 import * as webpack from "webpack";
-import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
+import { join } from "path";
 
 const config: webpack.Configuration = {
+  context: join(__dirname, "../"),
   devtool: "inline-source-map",
   entry: [
     "react-hot-loader/patch",
     "webpack-hot-middleware/client",
-    "./src/client",
+    "./src/client/clientEntry"
   ],
   module: {
     rules: [
@@ -23,6 +24,14 @@ const config: webpack.Configuration = {
           }
         ]
       },
+      {
+        test: /\.(eot|svg|ttf|woff|woff2)$/,
+        use: "file-loader"
+      },
+      {
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        use: ["file-loader", "image-webpack-loader"]
+      }
     ]
   },
   output: {
@@ -36,9 +45,11 @@ const config: webpack.Configuration = {
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
-    new BundleAnalyzerPlugin({
-      logLevel: "silent",
-      openAnalyzer: false
+    new webpack.optimize.CommonsChunkPlugin({
+      minChunks(module) {
+        return module.context && module.context.indexOf("node_modules") !== -1;
+      },
+      name: "common"
     })
   ],
   resolve: {
@@ -48,6 +59,6 @@ const config: webpack.Configuration = {
     colors: true
   },
   target: "web"
-}
+};
 
 export default config;

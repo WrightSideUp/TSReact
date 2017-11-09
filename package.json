@@ -1,6 +1,7 @@
 {
   "name": "tsreact",
-  "description": "POC for including React, React Router v4, Typescript, HMR, SSR in one sweet pie.",
+  "description":
+    "POC for including React, React Router v4, Typescript, HMR, SSR in one sweet pie.",
   "version": "0.1.0",
   "author": "Bruce Wright",
   "license": "MIT",
@@ -18,7 +19,7 @@
         "DEBUG": "app:*",
         "NODE_ENV": "development"
       },
-      "command": "nodemon ./src/server"
+      "command": "nodemon ./src/server/serverEntry"
     }
   },
   "scripts": {
