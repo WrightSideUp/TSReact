@@ -25,17 +25,22 @@ const config: webpack.Configuration = {
         ]
       },
       {
-        test: /\.(eot|svg|ttf|woff|woff2)$/,
+        test: /\.(eot|ttf|woff|woff2)$/,
         use: "file-loader"
       },
       {
-        test: /\.(jpe?g|png|gif|svg)$/i,
-        use: ["file-loader", "image-webpack-loader"]
+        test: /\.(jpg|png|gif|svg)$/,
+        use: [
+          {
+            loader: "url-loader"
+          }
+        ]
       }
     ]
   },
   output: {
     filename: "[name].js",
+    path: join(__dirname, "../dist"),
     pathinfo: true
   },
   plugins: [
