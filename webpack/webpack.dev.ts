@@ -32,7 +32,10 @@ const config: webpack.Configuration = {
         test: /\.(jpg|png|gif|svg)$/,
         use: [
           {
-            loader: "url-loader"
+            loader: "url-loader",
+            options: {
+              limit: 8192
+            }
           }
         ]
       }
