@@ -26,5 +26,6 @@ typings/
 # Optional REPL history
 .node_repl_history
 
-# dist directory
-dist/
+# build directories
+buildClient
+buildServer

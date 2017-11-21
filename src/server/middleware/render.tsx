@@ -1,24 +1,45 @@
-import { Request, Response } from "express";
 import * as React from "react";
-import { renderToString, renderToStaticMarkup } from "react-dom/server";
-import { HTML } from "./html";
-import { Helmet } from "react-helmet";
-import App from "../../app";
+import * as ReactDOM from "react-dom/server";
+import * as Express from "express";
+import * as webpack from "webpack";
+import Helmet from "react-helmet";
+import { flushChunkNames } from "react-universal-component/server";
+import flushChunks from "webpack-flush-chunks";
+import App from "../../app/App";
+import HTML from "./html";
 
-export function createPage(req: Request, res: Response): string {
-  const assets = res.locals.webpackStats.toJson().assetsByChunkName;
+export type RenderParams = {
+  clientStats: webpack.Stats;
+  serverStats?: webpack.Stats;
+  outputPath?: string;
+};
 
-  const appHtml = renderToString(<App />);
+export default ({
+  clientStats
+}: RenderParams): Express.RequestHandler => async (
+  req: Express.Request,
+  res: Express.Response
+) => {
+  const appMarkup = ReactDOM.renderToString(<App />);
   const helmet = Helmet.renderStatic();
 
-  return renderToStaticMarkup(
-    <HTML assets={assets} url={req.url} helmet={helmet} appHtml={appHtml} />
-  );
-}
+  console.log(`meta: ${helmet.meta}`);
 
-export default function render(req: Request, res: Response): void {
-  res.status(200);
-  res.write("<!doctype HTML>");
-  res.write(createPage(req, res));
-  return res.end();
-}
+  const chunkNames = flushChunkNames();
+  const { Js, Styles, CssHash } = flushChunks(clientStats, { chunkNames });
+
+  console.log(`Requested Path: ${req.path}`);
+  console.log(`Chunk Names: ${chunkNames}`);
+
+  const htmlString = ReactDOM.renderToStaticMarkup(
+    <HTML
+      scripts={Js}
+      styles={Styles}
+      cssHash={CssHash}
+      appMarkup={appMarkup}
+      helmet={helmet}
+    />
+  );
+
+  return res.send("<!doctype html>" + htmlString);
+};

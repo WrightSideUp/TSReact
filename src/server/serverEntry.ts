@@ -1,31 +1,49 @@
-import * as debug from "debug";
-import * as Express from "express";
-import render from "./middleware/render";
-import { devMiddleware, hotMiddleware } from "./middleware/webpack-server";
+/// <reference types="webpack" />
 
-const log = debug("app:server");
+import "babel-polyfill";
+import * as Express from "express";
+import * as webpack from "webpack";
+import * as webpackDevMiddleware from "webpack-dev-middleware";
+import * as webpackHotMiddleware from "webpack-hot-middleware";
+import * as webpackHotServerMiddleware from "webpack-hot-server-middleware";
+import clientConfig from "../../webpack/client.dev";
+import serverConfig from "../../webpack/server.dev";
+
+const output = clientConfig.output;
+const publicPath = (output && output.publicPath) || "";
+const outputPath = (output && output.path) || "";
 
 const app = Express();
 
-const isProduction: boolean = process.env.NODE_ENV === "production";
-console.log(`isProduction = ${isProduction}`);
+const isDevelopment: boolean = process.env.NODE_ENV === "development";
 
-if (!isProduction) {
-  log("Using Development Server Config");
-  app.use(devMiddleware);
-  app.use(hotMiddleware);
+if (isDevelopment) {
+  // 'as any' cast needed because current webpack typings do not
+  // allow access to 'compilers' member.
+  const multiCompiler = webpack([clientConfig, serverConfig]) as any;
+  const clientCompiler = multiCompiler.compilers[0];
+
+  app.use(
+    webpackDevMiddleware(multiCompiler, {
+      publicPath,
+      stats: { colors: true, warnings: false }
+    })
+  );
+  app.use(webpackHotMiddleware(clientCompiler, { log: false }));
+  app.use(
+    webpackHotServerMiddleware(multiCompiler, {
+      serverRendererOptions: { outputPath }
+    })
+  );
 }
+// else {
+//   const clientStats = require("../buildClient/stats.json");
+//   const serverRender = require("../buildServer/main.js").default;
 
-app.get("*", render);
+//   app.use(publicPath, Express.static(outputPath));
+//   app.use(serverRender({ clientStats, outputPath }));
+// }
 
-if (!isProduction) {
-  devMiddleware.waitUntilValid(() => {
-    app.listen(3750, () => {
-      log("Server started on localhost:3750");
-    });
-  });
-} else {
-  app.listen(3750, () => {
-    log("Server started on localhost:3750");
-  });
-}
+app.listen(3750, () => {
+  console.log("Server started on localhost:3750");
+});

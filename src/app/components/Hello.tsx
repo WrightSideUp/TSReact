@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "styled-components";
+import * as styles from "./hello.scss";
 
 export interface HelloProps {
   compiler: string;
@@ -7,18 +7,11 @@ export interface HelloProps {
   className?: string;
 }
 
-const HelloContainer = styled.h1`
-  background: purple;
-  color: white;
-  text-align: center;
-  padding: 20px 0;
-`;
-
 const Hello: React.SFC<HelloProps> = props => {
   return (
-    <HelloContainer>
+    <h1 className={styles.containerHeading}>
       Hello from {props.compiler} and {props.framework}!
-    </HelloContainer>
+    </h1>
   );
 };
 
