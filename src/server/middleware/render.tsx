@@ -22,9 +22,6 @@ export default ({
 ) => {
   const appMarkup = ReactDOM.renderToString(<App />);
   const helmet = Helmet.renderStatic();
-
-  console.log(`meta: ${helmet.meta}`);
-
   const chunkNames = flushChunkNames();
   const { Js, Styles, CssHash } = flushChunks(clientStats, { chunkNames });
 

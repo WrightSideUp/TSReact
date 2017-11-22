@@ -1,5 +1,3 @@
-/// <reference types="webpack" />
-
 import "babel-polyfill";
 import * as Express from "express";
 import * as webpack from "webpack";
@@ -8,6 +6,7 @@ import * as webpackHotMiddleware from "webpack-hot-middleware";
 import * as webpackHotServerMiddleware from "webpack-hot-server-middleware";
 import clientConfig from "../../webpack/client.dev";
 import serverConfig from "../../webpack/server.dev";
+import globalConfig from "../config/globalConfig";
 
 const output = clientConfig.output;
 const publicPath = (output && output.publicPath) || "";
@@ -36,14 +35,7 @@ if (isDevelopment) {
     })
   );
 }
-// else {
-//   const clientStats = require("../buildClient/stats.json");
-//   const serverRender = require("../buildServer/main.js").default;
 
-//   app.use(publicPath, Express.static(outputPath));
-//   app.use(serverRender({ clientStats, outputPath }));
-// }
-
-app.listen(3750, () => {
-  console.log("Server started on localhost:3750");
+app.listen(globalConfig.endpoints.webPort, () => {
+  console.log(`Server started on localhost:${globalConfig.endpoints.webPort}`);
 });
